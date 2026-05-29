@@ -30,6 +30,10 @@ try:
         "min_temperature": daily_data["temperature_2m_min"]
     })
 
+    df["temperature_category"] = df["max_temperature"].apply(
+        lambda x: "Hot" if x > 35 else "Warm" if x > 25 else "Cold"
+    )
+
     print(df)
 
 except requests.exceptions.RequestException as e:
