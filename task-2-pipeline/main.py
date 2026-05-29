@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import logging
+from google.cloud import bigquery
 
 logging.basicConfig(level=logging.INFO)
 
@@ -35,6 +36,16 @@ try:
     )
 
     print(df)
+    client = bigquery.Client.from_service_account_json(
+    "weather-data-497718-9f961d3fb8d2.json"
+    )
+
+    table_id = "weather-data-497718.weather_dataset.weather_data"
+
+    job = client.load_table_from_dataframe(df, table_id)
+    job.result()
+
+    print("Data loaded successfully into BigQuery!")
 
 except requests.exceptions.RequestException as e:
     logging.error(f"API request failed: {e}")
